@@ -39,6 +39,12 @@ Route::get('/info', static function(): string {
 Route::get('/newsM', [NewsControllerM::class,'news']);
 Route::get('/newsM/{id}', [NewsControllerM::class,'newsOne']);
 
+Route::get('/',[NewsController::class, 'welcome'])
+        ->name('main');
+Route::get('/show_category_news/{id}', [NewsController::class, 'showCategoryNews'])
+        ->name('show.category.news')
+        ->where('id','\d+');
+
 Route::group(['prefix' => 'guest'], static function(){
     Route::get('/news', [NewsController::class, 'index'])
         ->name('news');
