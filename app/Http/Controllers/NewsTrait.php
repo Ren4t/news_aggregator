@@ -5,12 +5,32 @@ namespace App\Http\Controllers;
 
 trait NewsTrait {
     
+    public function getCategories(int $id = null) {
+        $categories = [];
+        $quantityCategories = 5;
+        if ($id === null)
+        {
+            for($i = 1;$i<=$quantityCategories;$i++)
+            {
+                $categories[$i] = [
+                    'id' => $i,
+                    'title' => fake()->title()
+                ];
+            }
+            return $categories;
+        }
+        return [
+                    'id' => $id,
+                    'title' => fake()->title()
+        ];
+    }
+    
     public function getNews(int $id = null): array {
         $news = [];
         $quantityNews = 10;
         if($id === null)
         {
-            for($i = 1;$i<$quantityNews;$i++)
+            for($i = 1;$i<=$quantityNews;$i++)
             {
                 $news[$i] = [
                     'id' => $i,
