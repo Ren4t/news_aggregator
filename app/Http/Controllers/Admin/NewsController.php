@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\NewsTrait;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use function view;
 
 class NewsController extends Controller
 {
+    use NewsTrait;
     /**
      * Display a listing of the resource.
      */
