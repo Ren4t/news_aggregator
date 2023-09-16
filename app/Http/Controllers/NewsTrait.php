@@ -9,6 +9,7 @@ trait NewsTrait {
             for ($i = 1; $i <= 10; $i++) {
                 $news[] = [
                     'id' => $i,
+                    'category_id' => random_int(1, 10),
                     'title' => fake()->jobTitle(),
                     'image' => fake()->imageUrl(),
                     'author' => fake()->userName(),
@@ -22,6 +23,7 @@ trait NewsTrait {
 
         return [
             'id' => $id,
+            'category_id' => random_int(1, 10),
             'title' => fake()->jobTitle(),
             'image' => fake()->imageUrl(),
             'author' => fake()->userName(),

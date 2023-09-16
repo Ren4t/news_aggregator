@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\IndexController as AdminController;
 use App\Http\Controllers\Admin\NewsController as AdminNewsController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\IndexController;
 use App\Http\Controllers\NewsController;
 use Illuminate\Support\Facades\Route;
 
@@ -22,7 +23,7 @@ use Illuminate\Support\Facades\Route;
 //    return view('welcome');
 //});
 
-//Route::view('/','welcome');
+Route::get('/',IndexController::class)->name('index');
 Route::name('news.')
         ->prefix('news')
         ->group(function(){
