@@ -25,6 +25,7 @@ class NewsController extends Controller
      */
     public function create(): View
     {
+        //dump(request()->old());
         return view('admin.news.create');
     }
 
@@ -33,7 +34,10 @@ class NewsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+       //dd($request->all());
+        $request->flash();
+        return redirect()->route('admin.news.create');
+        // return response()->json($request->all());
     }
 
     /**
