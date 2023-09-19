@@ -18,15 +18,15 @@
         @forelse($newsList as $news) <!-- 'newsList' => $this->getNews() -->
         <div class="col">
           <div class="card shadow-sm">
-              <p><strong>{{ $news['title'] }}</strong></p>
-              <img src="{{ $news['image']}}" alt="image"/>
+              <p><strong>{{ $news->title }}</strong></p>
+              <img src="{{ $news->image }}" alt="image"/>
             <div class="card-body">
-              <p class="card-text">{{ $news['description']}}</p>
+              <p class="card-text">{{ $news->description}}</p>
               <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
-                    <a href="{{route('news.show',['id' => $news['id']])}}" class="btn btn-sm btn-outline-secondary">Show</a>
+                    <a href="{{route('news.show',['id' => $news->id])}}" class="btn btn-sm btn-outline-secondary">Show</a>
                 </div>
-                <small class="text-muted">{{$news['author']}} ({{$news['created']}})</small>
+                <small class="text-muted">{{$news->author}} ({{$news->created_at}})</small>
               </div>
             </div>
           </div>
