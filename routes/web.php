@@ -3,6 +3,8 @@
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\IndexController as AdminController;
 use App\Http\Controllers\Admin\NewsController as AdminNewsController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\IndexController;
 use App\Http\Controllers\NewsController;
 use Illuminate\Support\Facades\Route;
 
@@ -21,18 +23,24 @@ use Illuminate\Support\Facades\Route;
 //    return view('welcome');
 //});
 
-//Route::view('/','welcome');
-
-Route::get('/news',[NewsController::class, 'index']) //'index' метод в классе NewsController
-        ->name('news.index');
-Route::get('news/{id}',[NewsController::class,'show']) // url news/{id}
-        ->where('id','\d+') // 'id','\d+' регулярное выражени говорит что 'id' должно быть числом 
-        ->name('news.show'); // 'news.show' имя роута
-Route::get('news/categories',[NewsController::class,'categories']) 
-        ->name('news.categories'); 
+Route::get('/',IndexController::class)->name('index');
+Route::name('news.')
+        ->prefix('news')
+        ->group(function(){
+            Route::get('/',[NewsController::class, 'index']) //'index' метод в классе NewsController
+                ->name('index');
+            Route::get('/{id}',[NewsController::class,'show']) // url news/{id}
+                ->where('id','\d+') // 'id','\d+' регулярное выражени говорит что 'id' должно быть числом 
+                ->name('show'); // 'news.show' имя роута
+            Route::name('category.')
+                    ->group(function (){
+                        Route::get('categories',[CategoryController::class,'show']) 
+                            ->name('show'); 
+                    });
+        });
 Route::group(['prefix'=>'admin', 'as' => 'admin.'], function (){ // 'prefix'=>'admin' к url добавится префикс admin/
 //'as' => 'admin.'  для всех роутов будет префикс admin.
     Route::get('/', AdminController::class)->name('index');
-    Route::resource('categories', AdminCategoryController::class);// url admin/categories/
-    Route::resource('news', AdminNewsController::class);// url admin/news/
+    Route::resource('categories', AdminCategoryController::class);
+    Route::resource('news', AdminNewsController::class);
 });

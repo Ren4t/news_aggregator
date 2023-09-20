@@ -18,9 +18,9 @@
         @forelse($newsList as $news) <!-- 'newsList' => $this->getNews() -->
         <div class="col">
           <div class="card shadow-sm">
+              <p><strong>{{ $news['title'] }}</strong></p>
               <img src="{{ $news['image']}}" alt="image"/>
             <div class="card-body">
-                <p><strong>{{ $news['title'] }}</strong></p>
               <p class="card-text">{{ $news['description']}}</p>
               <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
