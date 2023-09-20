@@ -8,8 +8,8 @@
         
     </div>
 </div>
-<x-alert :type="request()->query('t', 'light')" :message="request()->query('m', 'Все поля к заполнению')" ></x-alert>
-<form method="post" action="{{ route('admin.news.store') }}">
+<x-alert :type="request()->query('t', 'light')" :message="request()->query('m', 'Все поля к заполнению')" :show="request()->query('s', ' ')"></x-alert>
+<form  method="post" action="{{ route('admin.news.store') }}" enctype="multipart/form-data">
     @csrf
     <div class="form-group">
         <label for="title">Заголовок</label>
@@ -21,7 +21,7 @@
     </div>
     <div class="form-group">
         <label for="img_url">image_url</label>
-        <input type="text" name="img_url" class="form-control" id="img_url" value="{{ old('img_url') }}">
+        <input type="file" name="img_url" class="form-control" id="img_url" }}">
     </div>
     <div class="form-group">
         <label for="status">Статус</label>

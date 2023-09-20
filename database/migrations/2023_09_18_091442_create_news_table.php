@@ -20,9 +20,9 @@ return new class extends Migration
             $table->string('title');
             $table->string('author',100)->defaul('Admin');
             $table->string('image')->nullable();
-            $table->enum('status', Status::getEnums());
+            $table->enum('status', Status::getEnums()); // Status::getEnums() массив "список" всех значений для базы данных
             $table->timestamps();
-            $table->index('status');
+            $table->index('status'); // индексировать поля колонки status
         });
     }
 

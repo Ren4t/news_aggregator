@@ -34,28 +34,37 @@ class NewsController extends Controller {
      */
     public function store(Request $request) {
         //dd($request->all());
-        if ($request->title == null || $request->img_url == null || $request->author == null || $request->description == null) {
+        $image_name=null;
+        if($request->hasFile('img_url'))
+        {
+        $image_name = $request->file('img_url')->getClientOriginalName();
+        $request->file('img_url')->move(public_path('storage/'), $image_name);
+            
+        }
+        if ($request->title == null || $image_name == null || $request->author == null || $request->description == null) {
             $request->flash();
-            return redirect()->route('admin.news.create',[
-                't'=>'danger',
-                'm'=> 'Не все поля заполнены'
+            return redirect()->route('admin.news.create', [
+                        't' => 'danger',
+                        'm' => 'Не все поля заполнены',//admin/news/create?t=danger&m=Не все поля заполнены
+                        's' => 'show'
             ]);
         } else {
             DB::table('news')->insert([
                 'category_id' => 1,
                 'title' => $request->title,
-                'image' => $request->img_url,
+                'image' => $image_name,
                 'author' => $request->author,
                 'status' => $request->status,
                 'description' => $request->description,
                 'created_at' => now(),
-            ]);   
+            ]);
         }
 
-        return redirect()->route('admin.news.create',[
-                't'=>'info',
-                'm'=> 'Добавление прошло успешно'
-            ]);
+        return redirect()->route('admin.news.create', [
+                    't' => 'info',
+                    'm' => 'Добавление прошло успешно', // создаст get запрос localhost/admin/news/create?t=info&m=Добавление%20прошло%20успешно
+                    's' => 'show'
+        ]);
         // return response()->json($request->all());
     }
 

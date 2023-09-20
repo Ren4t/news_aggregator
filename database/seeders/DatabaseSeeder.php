@@ -14,7 +14,8 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
                 CategorySeeder::class,
-                NewsSeeder::class,
+                NewsSeeder::class, // сиды добавить в массив, 
+                //php artisan migrate --seed будет вызван сразу для всех сидов
         ]);
         // \App\Models\User::factory(10)->create();
 
