@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\News;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
@@ -14,10 +15,12 @@ class NewsController extends Controller {
      * Display a listing of the resource.
      */
     public function index(): View {
-        $news = $news = DB::table('news')
-                ->join('categories', 'categories.id', '=', 'news.category_id')
-                ->select('news.*', 'categories.title as category_title')
-                ->get();
+        $news = News::query()->paginate(10);
+        //dd($news);
+//        $news = $news = DB::table('news')
+//                ->join('categories', 'categories.id', '=', 'news.category_id')
+//                ->select('news.*', 'categories.title as category_title')
+//                ->get();
         return view('admin.news.index', ['newsList' => $news]);
     }
 
@@ -52,7 +55,7 @@ class NewsController extends Controller {
             DB::table('news')->insert([
                 'category_id' => 1,
                 'title' => $request->title,
-                'image' => $image_name,
+                'image' => asset('storage/' . $image_name),
                 'author' => $request->author,
                 'status' => $request->status,
                 'description' => $request->description,

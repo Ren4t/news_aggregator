@@ -39,5 +39,7 @@
             @endforelse
         </tbody>
     </table>
+    <br>
+    {{ $newsList->links() }}
 </div>
 @endsection

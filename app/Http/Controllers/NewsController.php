@@ -4,6 +4,7 @@ declare (strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Models\News;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
@@ -14,10 +15,7 @@ final class NewsController extends Controller
 //    use NewsTrait;
     public function index(): View {
         
-        $news = DB::table('news')
-                ->join('categories','categories.id','=','news.category_id')
-                ->select('news.*','categories.title as category_title')
-                ->get();
+       $news = News::query()->paginate(6);
         //dd($news); // var_dump() die()
         return view('news.index',[ // вернет шаблон resources/views/news/index.blade.php
             'newsList' => $news, // в шаблон передаст параметр 'newsList' 
@@ -25,8 +23,8 @@ final class NewsController extends Controller
         ]);
     }
     
-    public function show(int $id): View{
-        $news = DB::table('news')->find($id);
+    public function show(News $news): View{
+        //$news = $news->find($news);
         //dd($news);
         return view('news.show')->with([
             'news' => $news,
