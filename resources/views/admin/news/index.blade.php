@@ -1,4 +1,5 @@
 @extends('layouts.admin')
+@section("title") Список новостей @parent @stop
 @section("content")
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
     <h1 class="h2">Список новостей</h1>
@@ -24,11 +25,11 @@
         <tbody>
             @forelse($newsList as $news)
             <tr>
-                <td>{{ $news['id'] }}</td>
-                <td>{{ $news['title'] }}</td>
-                <td>{{ $news['author'] }}</td>
-                <td>{{ $news['status'] }}</td>
-                <td>{{ $news['created'] }}</td>
+                <td>{{ $news->id }}</td>
+                <td>{{ $news->title }}</td>
+                <td>{{ $news->author }}</td>
+                <td>{{ $news->status }}</td>
+                <td>{{ $news->created_at }}</td>
                 <td><a href="#">Ред.</a>|<a href="#" style="color: red">Удал.</a></td> 
             </tr>
             @empty
