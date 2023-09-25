@@ -15,17 +15,60 @@ class CategorySeeder extends Seeder {
         DB::table('categories')->insert($this->getData());
     }
 
-    public function getData():array {
-        $quantity = 10;
-        $categories = [];
-        for ($i = 0; $i < $quantity; $i++) {
-            $categories[] = [
-                'title' => fake()->jobTitle(),
-                'description' => fake()->text(100),
+    public function getData(): array {
+        $categories = [
+            [
+                'title' => 'Спорт',
+                'description' => 'Новости спорта',
                 'created_at' => now(),
-            ];
-        }
+            ],
+            [
+                'title' => 'Полититка',
+                'description' => 'Новости политики',
+                'created_at' => now(),
+            ],
+            [
+                'title' => 'Культура',
+                'description' => 'Новости культуры',
+                'created_at' => now(),
+            ],
+            [
+                'title' => 'Кино',
+                'description' => 'Новости кино',
+                'created_at' => now(),
+            ],
+            [
+                'title' => 'Музыка',
+                'description' => 'Новости музыка',
+                'created_at' => now(),
+            ],
+            [
+                'title' => 'Космос',
+                'description' => 'Новости космос',
+                'created_at' => now(),
+            ],
+            [
+                'title' => 'Природа',
+                'description' => 'Новости природа',
+                'created_at' => now(),
+            ],
+            [
+                'title' => 'Строительство',
+                'description' => 'Новости строительство',
+                'created_at' => now(),
+            ],
+            [
+                'title' => 'Отдых',
+                'description' => 'Новости отдых',
+                'created_at' => now(),
+            ],
+            [
+                'title' => 'Развлечения',
+                'description' => 'Новости развлечения',
+                'created_at' => now(),
+            ],
+        ];
         return $categories;
     }
+
 }
-    

@@ -11,11 +11,19 @@
 </div>
 
 <div class="table-responsive">
+    @include('inc.message')
+    <select id="filter">
+        <option @if( request()->f === 'selected') selected @endif>selected</option>
+        <option @if(request()->f === 'draft') selected @endif>draft</option>
+        <option @if(request()->f === 'active') selected @endif>active</option>
+        <option @if(request()->f === 'blocked') selected @endif>blocked</option>
+    </select>
     <table class="table table-striped table-sm">
         <thead>
             <tr>
                 <th scope="col">#</th>
                 <th scope="col">Заголовок</th>
+                <th scope="col">Категория</th>
                 <th scope="col">Автор</th>
                 <th scope="col">Статус</th>
                 <th scope="col">Дата создания</th>
@@ -27,17 +35,31 @@
             <tr>
                 <td>{{ $news->id }}</td>
                 <td>{{ $news->title }}</td>
+                <td>{{ $news->category->title }}</td> <!-- метод category() из модели -->
                 <td>{{ $news->author }}</td>
                 <td>{{ $news->status }}</td>
                 <td>{{ $news->created_at }}</td>
-                <td><a href="#">Ред.</a>|<a href="#" style="color: red">Удал.</a></td> 
+                <td><a href="{{ route('admin.news.edit', $news) }}">Ред.</a>|<a href="{{ route('admin.news.destroy', $news) }}" style="color: red">Удал.</a></td> 
             </tr>
             @empty
             <tr>
-                <td colspan='6'>Записей нет</td>
+                <td colspan='7'>Записей нет</td>
             </tr>
             @endforelse
         </tbody>
     </table>
+    <br>
+    {{ $newsList->links() }}
 </div>
 @endsection
+@push('js')
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+        let filter = document.getElementById("filter");
+        filter.addEventListener("change", function(event){
+            location.href = "?f=" + this.value;
+        });
+    });</script>
+@endpush
+
+

@@ -19,27 +19,15 @@ class NewsSeeder extends Seeder {
     }
 
     public function getData(): array {
-        $status = function (int $key) {
-            switch ($key) {
-                case 1:
-                    return Status::DRAFT->value;
-                case 2:
-                    return Status::ACTIVE->value;
-                case 3:
-                    return Status::BLOCKED->value;
-                default:
-                    Status::BLOCKED->value;
-            }
-        };
         $quantity = 20;
         $news = [];
         for ($i = 0; $i < $quantity; $i++) {
             $news[] = [
-                'category_id' => random_int(1, 10),
-                'title' => fake()->jobTitle(),
+                'category_id' => fake()->randomNumber(1,10),
+                'title' => fake()->jobTitle(), 
                 'image' => fake()->imageUrl(200,150),
                 'author' => fake()->userName(),
-                'status' => $status(random_int(1, 3)),
+                'status' => fake()->randomElement(Status::getEnums()),//параметр принимает массив элементов выбора
                 'description' => fake()->text(100),
                 'created_at' => now(),
             ];
