@@ -2,14 +2,21 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\News\Status;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\News\Edit;
 use App\Models\Category;
 use App\Models\News;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rules\Enum;
 use Illuminate\View\View;
+use function back;
 use function redirect;
+use function response;
 use function view;
 
 class NewsController extends Controller {
@@ -26,8 +33,8 @@ class NewsController extends Controller {
                 ->orderByDesc('id')
                 ->paginate(10)
                 ->appends([
-                    'f' => $request->f
-                ]);
+            'f' => $request->f
+        ]);
         //dd($news);
 //        $news = $news = DB::table('news')
 //                ->join('categories', 'categories.id', '=', 'news.category_id')
@@ -43,7 +50,7 @@ class NewsController extends Controller {
         //dump(request()->old());
         $categories = Category::all();
         return view('admin.news.create')->with([
-            'categories' => $categories,
+                    'categories' => $categories,
         ]);
     }
 
@@ -51,25 +58,35 @@ class NewsController extends Controller {
      * Store a newly created resource in storage.
      */
     public function store(Request $request) {
-        $request->flash();
+
+        //ручная валидация
+        $tableName = (new Category())->getTable(); //вернет имя таблицы из модели (protected $table)
         //dd($request->all());
+        $request->validate([ // у request есть собственный метод валидации
+            'title' => ['required', 'string', 'min:3', 'max:150'],
+            'category_id' => ['required', 'integer', "exists:{$tableName},id"], // "exists:{$tableName},id"] имя таблицы и колонки для сравнения
+            'author' => ['required', 'string', 'min:2', 'max:100'],
+            'img_url' => ['nullable' /*'someone' поле может отсутствовать (checkbox)*/, 'image'],
+            'status' => ['required', new Enum(Status::class)],
+            'description' => ['nullable', 'string']
+        ]); // redirect flash выполняется внутри
+
         $data = $request->only(['category_id', 'title', 'author', 'status', 'description']);
         $news = new News($data);
-        
+
         $url = null;
-        if($request->file('img_url'))
-        {
+        if ($request->file('img_url')) {
             $path = Storage::putFile('public/img', $request->file('img_url'));
             $url = Storage::url($path);
         }
         //необходимо  в модели указать список полей которые нужно менять 
         $news->image = $url;
-         // переопределить поле $fillable
-        if($news->save()){
+        // переопределить поле $fillable
+        if ($news->save()) {
             return redirect()->route('admin.news.index', $news->id)->with('success', 'Новость успешно добавлена');
         }
-            return back()->with('error', 'Новость не удалось добавить');
-            
+        return back()->with('error', 'Новость не удалось добавить');
+
 //        if ($request->title == null || $image_name == null || $request->author == null || $request->description == null) {
 //            $request->flash();
 //            return redirect()->route('admin.news.create', [
@@ -102,48 +119,55 @@ class NewsController extends Controller {
      */
     public function show(string $id) {
         //
+        return 'show';
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(News $news) : View{
+    public function edit(News $news): View {
         $categories = Category::all();
         return view('admin.news.edit')->with([
-            'categories' => $categories,
-            'news' => $news,
+                    'categories' => $categories,
+                    'news' => $news,
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, News $news) {
-        $request->flash();
-        //dd($request->all());
+    public function update(Edit $request, News $news) {
+       
+        //правила валидации в классе Edit
         $data = $request->only(['category_id', 'title', 'author', 'status', 'description']);
         $news->fill($data);
-        
-        if($request->file('img_url'))
-        {
+         //необходимо  в модели указать список полей которые нужно менять 
+        // переопределить поле $fillable
+
+        if ($request->file('img_url')) {
             $path = Storage::putFile('public/img', $request->file('img_url'));
             $url = Storage::url($path);
             $news->image = $url;
         }
-        //необходимо  в модели указать список полей которые нужно менять 
-         // переопределить поле $fillable
-        if($news->save()){
+       
+        if ($news->save()) {
             return redirect()->route('admin.news.index', $news->id)->with('success', 'Новость успешно изменена');
         }
-            return back()->with('error', 'Новость не удалось изменить');
+        return back()->with('error', 'Новость не удалось изменить');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(News $Snews) {
-        $news->delete();
-        return redirect()->route('admin.news.index');
+    public function destroy(News $news) {
+       try{
+           $news->delete();
+            
+           return response()->json('ok');
+       } catch (Exception $ex) {
+           Log::error($ex->getMessage(), $ex->getTrace());
+           return response()->json('error', 400);
+       }
     }
 
 }
