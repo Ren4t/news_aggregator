@@ -4,7 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Enums\News\Status;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\News\Edit;
+use App\Http\Requests\Admin\News\CreateRequest;
+use App\Http\Requests\Admin\News\EditRequest;
 use App\Models\Category;
 use App\Models\News;
 use Exception;
@@ -57,19 +58,8 @@ class NewsController extends Controller {
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request) {
+    public function store(CreateRequest $request) {
 
-        //ручная валидация
-        $tableName = (new Category())->getTable(); //вернет имя таблицы из модели (protected $table)
-        //dd($request->all());
-        $request->validate([ // у request есть собственный метод валидации
-            'title' => ['required', 'string', 'min:3', 'max:150'],
-            'category_id' => ['required', 'integer', "exists:{$tableName},id"], // "exists:{$tableName},id"] имя таблицы и колонки для сравнения
-            'author' => ['required', 'string', 'min:2', 'max:100'],
-            'img_url' => ['nullable' /*'someone' поле может отсутствовать (checkbox)*/, 'image'],
-            'status' => ['required', new Enum(Status::class)],
-            'description' => ['nullable', 'string']
-        ]); // redirect flash выполняется внутри
 
         $data = $request->only(['category_id', 'title', 'author', 'status', 'description']);
         $news = new News($data);
@@ -87,31 +77,6 @@ class NewsController extends Controller {
         }
         return back()->with('error', 'Новость не удалось добавить');
 
-//        if ($request->title == null || $image_name == null || $request->author == null || $request->description == null) {
-//            $request->flash();
-//            return redirect()->route('admin.news.create', [
-//                        't' => 'danger',
-//                        'm' => 'Не все поля заполнены',//admin/news/create?t=danger&m=Не все поля заполнены
-//                        's' => 'show'
-//            ]);
-//        } else {
-//            DB::table('news')->insert([
-//                'category_id' => 1,
-//                'title' => $request->title,
-//                'image' => asset('storage/' . $image_name),
-//                'author' => $request->author,
-//                'status' => $request->status,
-//                'description' => $request->description,
-//                'created_at' => now(),
-//            ]);
-//        }
-//
-//        return redirect()->route('admin.news.create', [
-//                    't' => 'info',
-//                    'm' => 'Добавление прошло успешно', // создаст get запрос localhost/admin/news/create?t=info&m=Добавление%20прошло%20успешно
-//                    's' => 'show'
-//        ]);
-        // return response()->json($request->all());
     }
 
     /**
@@ -136,17 +101,25 @@ class NewsController extends Controller {
     /**
      * Update the specified resource in storage.
      */
-    public function update(Edit $request, News $news) {
-       
+    public function update(EditRequest $request, News $news) {
+       //dd($news);
         //правила валидации в классе Edit
         $data = $request->only(['category_id', 'title', 'author', 'status', 'description']);
         $news->fill($data);
          //необходимо  в модели указать список полей которые нужно менять 
         // переопределить поле $fillable
-
+        //if (Auth::user()->is_admin){выполнять блок если админ} но лучше использовать посредника IsAdmin
         if ($request->file('img_url')) {
+            $request->validate([ //если приходит картинка идет валидация
+                'img_url' => ['sometimes', 'image', 'mimes:jpeg,bmp,png|max1500'],
+            ]);
             $path = Storage::putFile('public/img', $request->file('img_url'));
             $url = Storage::url($path);
+            
+            $oldPath = str_replace('/storage', 'public', $news->image);
+            //dd($oldPath);
+            Storage::delete($oldPath);
+            //dd($path, $url);
             $news->image = $url;
         }
        
@@ -161,6 +134,9 @@ class NewsController extends Controller {
      */
     public function destroy(News $news) {
        try{
+           $oldPath = str_replace('/storage', 'public', $news->image);
+            //dd($oldPath);
+            Storage::delete($oldPath);
            $news->delete();
             
            return response()->json('ok');

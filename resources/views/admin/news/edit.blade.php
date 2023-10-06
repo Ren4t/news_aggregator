@@ -43,9 +43,9 @@
     <div class="form-group">
         <label for="status">Статус</label>
         <select class="form-control" name="status" id="status">
-            <option @selected(old('status') === 'draft' || $news->status === 'draft')>draft</option>
-            <option @selected(old('status') === 'active' || $news->status === 'active')>active</option>
-            <option @selected(old('status') === 'blocked' || $news->status === 'blocked')>blocked</option>
+            @foreach(\App\Enums\News\Status::getEnums() as $status)
+              <option @selected(old('status') === $status || $news->status === $status)>{{ $status }}</option>
+      @endforeach
         </select>
     </div>
     <div class="form-group">
