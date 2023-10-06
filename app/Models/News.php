@@ -11,7 +11,7 @@ class News extends Model {
 
     use HasFactory;
 
-    protected $fillable = [
+    protected $fillable = [ // поля которые можно менять в таблице
         'title',
         'category_id',
         'author',

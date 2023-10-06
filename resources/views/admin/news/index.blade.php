@@ -11,6 +11,8 @@
 </div>
 
 <div class="table-responsive">
+    
+    
     @include('inc.message')
     <select id="filter">
         <option @if( request()->f === 'selected') selected @endif>selected</option>
@@ -32,14 +34,15 @@
         </thead>
         <tbody>
             @forelse($newsList as $news)
-            <tr>
+            <tr id="{{ $news->id }}">
                 <td>{{ $news->id }}</td>
                 <td>{{ $news->title }}</td>
                 <td>{{ $news->category->title }}</td> <!-- метод category() из модели -->
                 <td>{{ $news->author }}</td>
                 <td>{{ $news->status }}</td>
                 <td>{{ $news->created_at }}</td>
-                <td><a href="{{ route('admin.news.edit', $news) }}">Ред.</a>|<a href="{{ route('admin.news.destroy', $news) }}" style="color: red">Удал.</a></td> 
+                <td><a href="{{ route('admin.news.edit', $news) }}">Ред.</a>|
+                    <a rel="{{ $news->id  }}" class="delete" href="javascript:"  style="color: red">Удал.</a></td> 
             </tr>
             @empty
             <tr>
@@ -59,7 +62,36 @@
         filter.addEventListener("change", function(event){
             location.href = "?f=" + this.value;
         });
-    });</script>
+    });
+        
+    let elements = document.querySelectorAll(".delete");
+        elements.forEach(function (element, key) {
+            element.addEventListener('click', function() {
+                const id = this.getAttribute('rel');
+                if (confirm(`Подтверждаете удаление записи с #ID = ${id}`)) {
+                    send(`/admin/news/${id}`).then( () => {
+                        //location.reload();
+                        console.log(id);
+                        document.getElementById(id).remove();
+                    });
+                } else {
+                    alert("Вы отменили удаление записи");
+                }
+            });
+        });
+
+
+        async function send(url) {
+            let response = await fetch (url, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            });
+            let result = await response.json();
+            return result.ok;
+        }
+</script>
 @endpush
 
 

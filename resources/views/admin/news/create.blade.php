@@ -8,12 +8,19 @@
 
     </div>
 </div>
+@if($errors->any()) <!-- вывод массива ошибок валидации -->
+        @foreach($errors->all() as $error)
+    <x-alert :message="$error" type="danger"></x-alert>
+        @endforeach
+    @endif
 @include('inc.message')
 <form  method="post" action="{{ route('admin.news.store') }}" enctype="multipart/form-data">
     @csrf
     <div class="form-group">
         <label for="title">Заголовок</label>
-        <input type="text" name="title" class="form-control" id="title" value="{{ old('title') }}">
+        <input type="text" name="title" class="form-control @error('title') is-invalid @enderror" id="title" value="{{ old('title') }}">
+        @error('title') <div id="validationServerUsernameFeedback" class="invalid-feedback">{{ $message }}</div>@enderror 
+        <!-- из шаблона подставлятся текст ошибки -->
     </div>
     <div class="form-group">
         <label for="category_id">Категория</label>
