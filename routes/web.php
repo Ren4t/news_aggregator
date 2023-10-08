@@ -47,6 +47,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth','is
     Route::get('/', AdminController::class)->name('index');
     Route::resource('categories', AdminCategoryController::class);
     Route::resource('news', AdminNewsController::class);
+    Route::resource('users', App\Http\Controllers\Admin\UserController::class);
 });
 
 Auth::routes();
