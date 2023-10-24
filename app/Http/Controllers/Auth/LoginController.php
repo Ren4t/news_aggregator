@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Events\DefineLoginEvent;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Symfony\Component\HttpFoundation\Request;
+use function event;
 
 class LoginController extends Controller
 {
@@ -36,5 +39,13 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout'); //маршрут для гостя убирается
+    }
+    
+     protected function authenticated(Request $request, $user) //этод метод будет срабатывать кода пользователь был опознан
+     //при входе через основную форму входа
+    {
+         //бросаем событие
+        event(new DefineLoginEvent($user));//связать со слушателем LastLoginUpdateListener 
+        //в провайдоре Providers/EventServiceProvider
     }
 }

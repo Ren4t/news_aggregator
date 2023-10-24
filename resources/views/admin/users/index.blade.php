@@ -31,7 +31,13 @@
                 <td>{{ $user->id }}</td>
                 <td>{{ $user->name }}</td>
                 <td>{{ $user->email }}</td> <!-- метод category() из модели -->
-                <td>{{ $user->is_admin }}</td>
+                <td class="d-flex justify-content-start">
+                    @if($user->is_admin)
+                        <a href="{{ route('admin.toggleAdmin', $user) }}" type="button" class="btn btn-danger">Снять админа</a>
+                    @else
+                        <a href="{{ route('admin.toggleAdmin', $user) }}" type="button" class="btn btn-success">Назначить админом</a>
+                    @endif    
+                </td>
                 <td>{{ $user->created_at }}</td>
                 <td><a href="{{ route('admin.users.edit', $user) }}">Ред.</a>|
                     <a rel="{{ $user->id  }}" class="delete" href="javascript:"  style="color: red">Удал.</a></td> 

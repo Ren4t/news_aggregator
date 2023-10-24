@@ -3,10 +3,12 @@
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\IndexController as AdminController;
 use App\Http\Controllers\Admin\NewsController as AdminNewsController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\NewsController;
+use App\Http\Controllers\SocialProvidersController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -45,9 +47,20 @@ Route::name('category.')
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth','is.admin']], function () { // 'prefix'=>'admin' к url добавится префикс admin/
 //'as' => 'admin.'  для всех роутов будет префикс admin.
     Route::get('/', AdminController::class)->name('index');
+    Route::get('/parser', App\Http\Controllers\Admin\ParserController::class)->name('parser');
     Route::resource('categories', AdminCategoryController::class);
     Route::resource('news', AdminNewsController::class);
-    Route::resource('users', App\Http\Controllers\Admin\UserController::class);
+    Route::get('users/toggleAdmin/{user}', [UserController::class, 'toggleAdmin'])
+            ->name('toggleAdmin');
+    Route::resource('users', UserController::class);
+});
+
+// для аутентификации через вк
+Route::group(['middleware' => 'guest'], function(){ //роут будет работать только если гость
+    Route::get('/vkontakte/redirect',[SocialProvidersController::class,'redirect'])
+            ->name('social-providers.redirect');
+    Route::get('/vkontakte/callback',[SocialProvidersController::class,'callback'])
+            ->name('social-providers.callback');
 });
 
 Auth::routes();

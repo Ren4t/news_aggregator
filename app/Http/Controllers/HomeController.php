@@ -13,7 +13,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        //$this->middleware('auth');//способ 1 задействовать посредника в конструкторе
+        //$this->middleware('auth');//способ 1 задействовать посредника в конструкторе закрыть доступ не авторизованным пользователям
     }
 
     /**

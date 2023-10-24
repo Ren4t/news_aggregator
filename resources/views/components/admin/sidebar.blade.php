@@ -26,6 +26,12 @@
                     Пользователи
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link @if(request()->routeIs('admin.parser.index'))active @endif" href="{{ route('admin.parser') }}">
+                    <span data-feather="users" class="align-text-bottom"></span>
+                    Парсер
+                </a>
+            </li>
         </ul>
     </div>
 </nav>

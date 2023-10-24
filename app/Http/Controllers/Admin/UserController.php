@@ -3,9 +3,17 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\User\CreateRequest;
+use App\Http\Requests\Admin\User\EditRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
+use TheSeer\Tokenizer\Exception;
+use function back;
+use function redirect;
+use function response;
 use function view;
 
 class UserController extends Controller
@@ -15,8 +23,20 @@ class UserController extends Controller
      */
     public function index(): View
     {
-        $users = User::all();
+        $users = User::query()//извлечение всех пользователей кроме авторизованного(себя)
+                ->where('id', '!=', Auth::id())
+                ->get();
         return view('admin.users.index', ['usersList' => $users]);
+    }
+    
+    public function toggleAdmin(User $user) 
+    {
+        $user->is_admin = !$user->is_admin;
+        //dd($user->is_admin);
+        
+        $user->save();
+        
+        return redirect()->route('admin.users.index')->with('success', 'Права изменены');
     }
 
     /**
@@ -30,7 +50,7 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(\App\Http\Requests\Admin\User\CreateRequest $request)
+    public function store(CreateRequest $request)
     {
         $data = $request->only(['name','email','password']);
         $user = new User($data);
@@ -66,7 +86,7 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(\App\Http\Requests\Admin\User\EditRequest $request, User $user)
+    public function update(EditRequest $request, User $user)
     {
         if($request->is_admin === 'true'){
             $user->is_admin = 1;
