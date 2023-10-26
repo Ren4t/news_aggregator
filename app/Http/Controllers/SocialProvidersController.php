@@ -14,15 +14,15 @@ use function route;
 
 class SocialProvidersController extends Controller
 {
-    public function redirect() {
+    public function redirect(string $driver) {
         
-        return Socialite::driver('vkontakte')->redirect();
+        return Socialite::driver($driver)->redirect();
     }
     
-    public function callback(Social $socialService) {
+    public function callback(string $driver, Social $socialService) {
         
         try { //если user ненайден в соц сети
-            $socialUser = Socialite::driver('vkontakte')->user();
+            $socialUser = Socialite::driver($driver)->user();
         } catch (Exception $ex) {
             return redirect('/login');
         }

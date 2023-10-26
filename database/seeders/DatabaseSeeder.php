@@ -17,8 +17,8 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-                CategorySeeder::class,
-                NewsSeeder::class, // сиды добавить в массив, 
+               // CategorySeeder::class,
+              //  NewsSeeder::class, // сиды добавить в массив, 
                 //php artisan migrate --seed будет вызван сразу для всех сидов
                 UserSeeder::class,
         ]);

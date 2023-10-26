@@ -13,6 +13,7 @@ class ParserController extends Controller {
         // $url2 = "https://news.rambler.ru/rss/community/";
 
         $parser->setLink($url)->saveParseData(); // заб
+        return redirect()->route('admin.news.index');
     }
 
 }

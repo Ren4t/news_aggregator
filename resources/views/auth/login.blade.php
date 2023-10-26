@@ -40,7 +40,7 @@
                         </div>
                         
                         <div class="d-flex justify-content-start">
-                            <a href="{{ route('social-providers.redirect') }}"><img src="{{ asset('assets/images/vk.png') }}" width="50" alt="vk"/></a>
+                            <a href="{{ route('social-providers.redirect',['driver'=>'vkontakte']) }}"><img src="{{ asset('assets/images/vk.png') }}" width="50" alt="vk"/></a>
                         </div>
                         
                         <div class="row mb-3">

@@ -57,9 +57,11 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth','is
 
 // для аутентификации через вк
 Route::group(['middleware' => 'guest'], function(){ //роут будет работать только если гость
-    Route::get('/vkontakte/redirect',[SocialProvidersController::class,'redirect'])
+    Route::get('/{driver}/redirect',[SocialProvidersController::class,'redirect'])
+            ->where('driver', '\w+')
             ->name('social-providers.redirect');
-    Route::get('/vkontakte/callback',[SocialProvidersController::class,'callback'])
+    Route::get('/{driver}/callback',[SocialProvidersController::class,'callback'])
+            ->where('driver', '\w+')
             ->name('social-providers.callback');
 });
 

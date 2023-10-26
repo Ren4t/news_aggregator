@@ -17,6 +17,7 @@ class News extends Model {
         'author',
         'status',
         'image',
+        'link',
         'description'
     ];
 

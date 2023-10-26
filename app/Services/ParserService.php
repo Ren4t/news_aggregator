@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Enums\News\Status;
+use App\Models\Category;
 use App\Models\News;
 use App\Services\Interfaces\Parser;
 use Orchestra\Parser\Xml\Facade as XmlParser;
@@ -31,15 +32,18 @@ class ParserService implements Parser {
                 'uses' => 'channel.item[title,link,author,description,pubDate,category,enclosure::url]', // двоеточие для извлечения атрибута<enclosure url="http" type="image/jpeg"/>
             ],
         ]);
-        dd($data);
+        //dd($data);
         foreach ($data['news'] as $news) {
-
-            News::firstOrCreate(
+            $category = Category::query()->firstOrCreate([ //если есть вернет модель категории если нет создаст категорию и вернет
+                'title' => $news['category'],
+            ]);
+            News::query()->firstOrCreate(
                     ['title' => $news['title'],
-                        'category_id' => 1,
+                        'category_id' => $category->id,
                         'author' => $news['author'],
-                        'status' => fake()->randomElement(Status::getEnums()),
+                        'status' => Status::ACTIVE->value,
                         'image' => $news['enclosure::url'],
+                        'link' => $news['link'],
                         'description' => $news['description'],
                     //'created_at' => $news['pubDate']
                     ]
