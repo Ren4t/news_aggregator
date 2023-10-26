@@ -17,10 +17,11 @@ class News extends Model {
         'author',
         'status',
         'image',
+        'link',
         'description'
     ];
 
-    public function category(): BelongsTo {
+    public function category(): BelongsTo { 
         
         return $this->belongsTo(Category::class, 'category_id');
     }

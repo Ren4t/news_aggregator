@@ -20,6 +20,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'is_admin',
         'password',
     ];
 
@@ -33,7 +34,7 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    /**
+    /**преобразование атрибутов 
      * The attributes that should be cast.
      *
      * @var array<string, string>
@@ -41,5 +42,6 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'is_admin' => 'boolean',//при обращении будет возращать не 0 или 1, а true or false
     ];
 }

@@ -10,6 +10,11 @@ class Category extends Model
 {
     use HasFactory;
     
+    protected $fillable = [ // поля которые можно менять в таблице
+        'title',
+        'description'
+    ];
+    
     public function news(): HasMany { 
         // метод извлечет все новости связанные с категорией        
         return $this->hasMany(News::class, 'category_id'); // отношение один ко многим

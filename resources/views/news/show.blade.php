@@ -1,4 +1,4 @@
-@extends('layouts.main')
+@extends('layouts.app')
 @section("title") Новости по категориям @parent @stop
 @section('content')
 

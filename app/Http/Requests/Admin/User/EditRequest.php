@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Requests\Admin\News;
+namespace App\Http\Requests\Admin\User;
 
 use App\Enums\News\Status;
 use App\Models\Category;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Enum;
 
-class Edit extends FormRequest
+class EditRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,14 +24,10 @@ class Edit extends FormRequest
      */
     public function rules(): array
     {
-        $tableName = (new Category())->getTable();
         return [
-            'title' => ['required', 'string', 'min:3', 'max:150'],
-            'category_id' => ['required', 'integer', "exists:{$tableName},id"], // "exists:{$tableName},id"] имя таблицы и колонки для сравнения
-            'author' => ['required', 'string', 'min:2', 'max:100'],
-            'img_url' => ['nullable' /*'someone' поле может отсутствовать (checkbox)*/, 'image'],
-            'status' => ['required', new Enum(Status::class)],
-            'description' => ['nullable', 'string']
+//             'name' => ['required', 'string', 'max:255'],
+//            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+//            'password' => ['required', 'string', 'min:8', 'confirmed'],
         ];
     }
     
@@ -43,9 +39,8 @@ class Edit extends FormRequest
 
     public function attributes(): array {
         return [
-            'title' => 'наименование',
+            'title' => 'категория',
             'description' => 'описание',
-            'author' => 'автор',
         ];
     }
 }

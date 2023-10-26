@@ -7,16 +7,20 @@
         
     </div>
 </div>
-
+@if($errors->any()) <!-- вывод массива ошибок валидации -->
+        @foreach($errors->all() as $error)
+    <x-alert :message="$error" type="danger"></x-alert>
+        @endforeach
+    @endif
 <form method="post" action="{{ route('admin.categories.store') }}">
     @csrf
     <div class="form-group">
         <label for="title">Категория</label>
-        <input type="text" name="title" class="form-control" id="title" value="">
+        <input type="text" name="title" class="form-control" id="title" value="{{ old('title') }}">
     </div>
     <div class="form-group">
         <label for="description">Описание</label>
-        <textarea name="description" class="form-control" id="desctiption"></textarea>
+        <textarea name="description" class="form-control" id="description">{{ old('description') }}</textarea>
     </div>
     <br>
     <button type="submit" class="btn btn-success">Save</button>

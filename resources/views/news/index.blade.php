@@ -1,4 +1,4 @@
-@extends('layouts.main') <!-- main.blaid.php -->
+@extends('layouts.app') <!-- main.blaid.php -->
 @section("title") Список новостей @parent @stop
 @section('content') {{-- @yield('content') --}}
 

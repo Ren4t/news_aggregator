@@ -57,7 +57,7 @@
             -webkit-overflow-scrolling: touch;
           }
         </style>
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     </head>
     <body>
         <x-news.header></x-news.header>
